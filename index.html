@@ -245,283 +245,283 @@
     }
 
     const initialQuestions = [
-        // --- 5 SPECIFIC PYTHON & NODE QUESTIONS (NEW) ---
+        // --- 5 SPECIFIC PYTHON & NODE QUESTIONS (FIXED) ---
         {
             scenario: "[Python] You are running a CPU-intensive task (e.g., image processing) using multi-threading in Python, but you notice it's only using one CPU core.",
             question: "What Python mechanism is preventing true parallelism in threads?",
             options: [
-                "**The Global Interpreter Lock (GIL)**",
+                "The Global Interpreter Lock (GIL)",
                 "The Garbage Collector",
                 "List Comprehensions",
-                "The `asyncio` loop"
+                "The asyncio loop"
             ],
-            answerText: "**The Global Interpreter Lock (GIL)**"
+            answerText: "The Global Interpreter Lock (GIL)"
         },
         {
             scenario: "[Node.js] You have a Node.js server. A user uploads a 5GB file. Your server crashes with an 'Out of Memory' error because you tried to read the whole file into a variable.",
             question: "What Node.js feature should you use to process this file in chunks without filling up RAM?",
             options: [
-                "**Streams (fs.createReadStream)**",
+                "Streams (fs.createReadStream)",
                 "Buffers (fs.readFileSync)",
                 "Promises",
                 "Events"
             ],
-            answerText: "**Streams (fs.createReadStream)**"
+            answerText: "Streams (fs.createReadStream)"
         },
         {
-            scenario: "[Python] You see this code: `@app.route('/login')`. The `@` symbol modifies the function below it.",
+            scenario: "[Python] You see this code: @app.route('/login'). The @ symbol modifies the function below it.",
             question: "What is this feature called, and what does it technically do?",
             options: [
-                "**Decorator; it wraps a function to extend its behavior without modifying the function itself.**",
+                "Decorator; it wraps a function to extend its behavior without modifying the function itself.",
                 "Generator; it creates an iterator.",
                 "Lambda; it creates an anonymous function.",
                 "Mixin; it adds properties to a class."
             ],
-            answerText: "**Decorator; it wraps a function to extend its behavior without modifying the function itself.**"
+            answerText: "Decorator; it wraps a function to extend its behavior without modifying the function itself."
         },
         {
             scenario: "[Node.js] You write a function that calculates Fibonacci numbers recursively. When a user requests a large number, the entire server freezes and cannot handle other requests.",
             question: "Why does this happen in Node.js?",
             options: [
-                "**Node.js is Single-Threaded; CPU-intensive tasks block the Event Loop.**",
+                "Node.js is Single-Threaded; CPU-intensive tasks block the Event Loop.",
                 "Node.js ran out of stack memory.",
                 "The Garbage Collector is running.",
-                "You forgot to use `await`."
+                "You forgot to use await."
             ],
-            answerText: "**Node.js is Single-Threaded; CPU-intensive tasks block the Event Loop.**"
+            answerText: "Node.js is Single-Threaded; CPU-intensive tasks block the Event Loop."
         },
         {
-            scenario: "[Node.js] A developer deleted their `node_modules` folder and ran `npm install`. The production app broke because a library updated to a newer version automatically.",
+            scenario: "[Node.js] A developer deleted their node_modules folder and ran npm install. The production app broke because a library updated to a newer version automatically.",
             question: "Which file was missing or ignored that guarantees exact version consistency?",
             options: [
-                "**package-lock.json**",
+                "package-lock.json",
                 "package.json",
                 ".gitignore",
                 "node_version.txt"
             ],
-            answerText: "**package-lock.json**"
+            answerText: "package-lock.json"
         },
 
-        // --- 20 GENERAL BACKEND QUESTIONS (RETAINED) ---
+        // --- 20 GENERAL BACKEND QUESTIONS (FIXED) ---
         {
             scenario: "You have a user listing API that is becoming slow. You notice the code executes 1 SQL query to get 50 users, and then loops through them to execute 50 more queries to get each user's address.",
             question: "What performance issue is this, and how do you fix it?",
             options: [
-                "**The N+1 problem; fix using Eager Loading or SQL JOINs.**",
+                "The N+1 problem; fix using Eager Loading or SQL JOINs.",
                 "Deadlock; fix using transaction isolation levels.",
                 "Memory Leak; fix using garbage collection.",
                 "Index Fragmentation; fix by re-indexing the database."
             ],
-            answerText: "**The N+1 problem; fix using Eager Loading or SQL JOINs.**"
+            answerText: "The N+1 problem; fix using Eager Loading or SQL JOINs."
         },
         {
             scenario: "A user double-clicks the 'Pay Now' button. Your API receives two identical requests at the exact same millisecond. Both are processed, charging the user twice.",
             question: "What property is your API missing to safely handle this scenario?",
             options: [
-                "**Idempotency**",
+                "Idempotency",
                 "Scalability",
                 "Authentication",
                 "Availability"
             ],
-            answerText: "**Idempotency**"
+            answerText: "Idempotency"
         },
         {
-            scenario: "You are designing an endpoint `POST /api/orders`. After a successful creation, what is the standard HTTP status code you should return?",
+            scenario: "You are designing an endpoint POST /api/orders. After a successful creation, what is the standard HTTP status code you should return?",
             question: "Select the most semantically correct status code.",
             options: [
-                "**201 Created**",
+                "201 Created",
                 "200 OK",
                 "204 No Content",
                 "202 Accepted"
             ],
-            answerText: "**201 Created**"
+            answerText: "201 Created"
         },
         {
             scenario: "Your application session data is currently stored in the memory of a single web server. You need to scale to 5 servers behind a load balancer, but users keep getting logged out.",
             question: "What is the industry-standard solution to manage sessions in a distributed environment?",
             options: [
-                "**Use a distributed cache like Redis or Memcached.**",
+                "Use a distributed cache like Redis or Memcached.",
                 "Use Sticky Sessions (Session Affinity) only.",
                 "Store the session in a global static variable.",
                 "Increase the RAM on all servers."
             ],
-            answerText: "**Use a distributed cache like Redis or Memcached.**"
+            answerText: "Use a distributed cache like Redis or Memcached."
         },
         {
             scenario: "You are building a high-traffic news feed. The data doesn't change often, but thousands of users request it every second. The database CPU is at 100%.",
             question: "What is the most effective immediate strategy to reduce database load?",
             options: [
-                "**Implement a caching layer (e.g., Redis/CDN) for read-heavy data.**",
+                "Implement a caching layer (e.g., Redis/CDN) for read-heavy data.",
                 "Migrate to a NoSQL database.",
                 "Normalize the database schema further.",
                 "Switch from TCP to UDP."
             ],
-            answerText: "**Implement a caching layer (e.g., Redis/CDN) for read-heavy data.**"
+            answerText: "Implement a caching layer (e.g., Redis/CDN) for read-heavy data."
         },
         {
-            scenario: "A developer writes a query: `SELECT * FROM users WHERE email = 'input_value';`. A hacker inputs `' OR '1'='1`.",
+            scenario: "A developer writes a query: SELECT * FROM users WHERE email = 'input_value';. A hacker inputs ' OR '1'='1.",
             question: "What vulnerability is this, and how do you prevent it?",
             options: [
-                "**SQL Injection; prevent using Parameterized Queries (Prepared Statements).**",
+                "SQL Injection; prevent using Parameterized Queries (Prepared Statements).",
                 "XSS (Cross-Site Scripting); prevent using Content Security Policy.",
                 "CSRF; prevent using Anti-Forgery Tokens.",
                 "DDoS; prevent using Rate Limiting."
             ],
-            answerText: "**SQL Injection; prevent using Parameterized Queries (Prepared Statements).**"
+            answerText: "SQL Injection; prevent using Parameterized Queries (Prepared Statements)."
         },
         {
             scenario: "Two banking transactions try to update the same account balance simultaneously. Transaction A reads $100. Transaction B reads $100. Both write $110. The balance should be $120, but ends up as $110.",
             question: "What is this phenomenon called?",
             options: [
-                "**Race Condition**",
+                "Race Condition",
                 "Deadlock",
                 "Stack Overflow",
                 "Memory Leak"
             ],
-            answerText: "**Race Condition**"
+            answerText: "Race Condition"
         },
         {
             scenario: "You need to store financial transaction records that must strictly adhere to a rigid schema and guarantee ACID properties.",
             question: "Which database type is generally the best fit?",
             options: [
-                "**Relational Database (SQL)**",
+                "Relational Database (SQL)",
                 "Key-Value Store (NoSQL)",
                 "Document Store (NoSQL)",
                 "Graph Database"
             ],
-            answerText: "**Relational Database (SQL)**"
+            answerText: "Relational Database (SQL)"
         },
         {
             scenario: "Your API users are complaining about timeouts. You discover that the API waits for an email to be sent via a 3rd party service before responding to the user.",
             question: "How should you re-architect this to improve response time?",
             options: [
-                "**Offload email sending to an asynchronous Message Queue (e.g., RabbitMQ, Kafka).**",
+                "Offload email sending to an asynchronous Message Queue (e.g., RabbitMQ, Kafka).",
                 "Increase the HTTP timeout limit on the client side.",
                 "Use a faster SMTP server.",
                 "Compress the JSON response."
             ],
-            answerText: "**Offload email sending to an asynchronous Message Queue (e.g., RabbitMQ, Kafka).**"
+            answerText: "Offload email sending to an asynchronous Message Queue (e.g., RabbitMQ, Kafka)."
         },
         {
-            scenario: "You are designing a REST API. A client requests `GET /users/999` but user 999 does not exist.",
+            scenario: "You are designing a REST API. A client requests GET /users/999 but user 999 does not exist.",
             question: "What HTTP status code should the server return?",
             options: [
-                "**404 Not Found**",
+                "404 Not Found",
                 "500 Internal Server Error",
                 "204 No Content",
                 "400 Bad Request"
             ],
-            answerText: "**404 Not Found**"
+            answerText: "404 Not Found"
         },
         {
             scenario: "Your system runs on 10 microservices. A request fails, but you don't know which service caused the failure.",
             question: "What architectural pattern/tool helps track a request across multiple microservices?",
             options: [
-                "**Distributed Tracing (e.g., Jaeger, Zipkin) with Correlation IDs.**",
+                "Distributed Tracing (e.g., Jaeger, Zipkin) with Correlation IDs.",
                 "Centralized Logging without IDs.",
                 "Health Check endpoints.",
                 "Circuit Breaker pattern."
             ],
-            answerText: "**Distributed Tracing (e.g., Jaeger, Zipkin) with Correlation IDs.**"
+            answerText: "Distributed Tracing (e.g., Jaeger, Zipkin) with Correlation IDs."
         },
         {
             scenario: "You need to secure an API used by a mobile app. You want to avoid sending credentials with every request and want a stateless authentication mechanism.",
             question: "Which standard is best suited for this?",
             options: [
-                "**JWT (JSON Web Tokens)**",
+                "JWT (JSON Web Tokens)",
                 "Server-side Sessions (Cookies)",
                 "Basic Authentication",
                 "Digest Authentication"
             ],
-            answerText: "**JWT (JSON Web Tokens)**"
+            answerText: "JWT (JSON Web Tokens)"
         },
         {
-            scenario: "You have a table with 10 million rows. Queries filtering by `last_name` are taking 5 seconds.",
+            scenario: "You have a table with 10 million rows. Queries filtering by last_name are taking 5 seconds.",
             question: "What is the most likely first step to optimize this query?",
             options: [
-                "**Add a database index on the `last_name` column.**",
+                "Add a database index on the last_name column.",
                 "Archive old data.",
                 "Change the column type to Varchar(255).",
                 "Switch to a Graph database."
             ],
-            answerText: "**Add a database index on the `last_name` column.**"
+            answerText: "Add a database index on the last_name column."
         },
         {
             scenario: "You are deploying a new version of your API. You want to route 10% of traffic to the new version and 90% to the old version to test stability.",
             question: "What is this deployment strategy called?",
             options: [
-                "**Canary Deployment**",
+                "Canary Deployment",
                 "Blue-Green Deployment",
                 "Rolling Update",
                 "Big Bang Deployment"
             ],
-            answerText: "**Canary Deployment**"
+            answerText: "Canary Deployment"
         },
         {
             scenario: "A 3rd party payment API you rely on is down. Your system keeps trying to call it, tying up all your threads and crashing your own application.",
             question: "What design pattern prevents this cascading failure?",
             options: [
-                "**Circuit Breaker Pattern**",
+                "Circuit Breaker Pattern",
                 "Singleton Pattern",
                 "Observer Pattern",
                 "Factory Pattern"
             ],
-            answerText: "**Circuit Breaker Pattern**"
+            answerText: "Circuit Breaker Pattern"
         },
         {
             scenario: "Your serverless function (e.g., AWS Lambda) takes 5 seconds to respond effectively after not being used for an hour, but only 200ms for subsequent requests.",
             question: "What is this phenomenon called?",
             options: [
-                "**Cold Start**",
+                "Cold Start",
                 "Memory Leak",
                 "Garbage Collection Pause",
                 "Network Latency"
             ],
-            answerText: "**Cold Start**"
+            answerText: "Cold Start"
         },
         {
-            scenario: "You have an endpoint `PUT /users/{id}` that updates user details. If a client sends the request without the `email` field, the existing email in the database gets deleted/set to null.",
+            scenario: "You have an endpoint PUT /users/{id} that updates user details. If a client sends the request without the email field, the existing email in the database gets deleted/set to null.",
             question: "What is the likely cause?",
             options: [
-                "**PUT replaces the entire resource. PATCH should be used for partial updates.**",
+                "PUT replaces the entire resource. PATCH should be used for partial updates.",
                 "The database trigger is malfunctioning.",
                 "The API is not idempotent.",
                 "The client sent a 204 status."
             ],
-            answerText: "**PUT replaces the entire resource. PATCH should be used for partial updates.**"
+            answerText: "PUT replaces the entire resource. PATCH should be used for partial updates."
         },
         {
             scenario: "You are designing a system where consistency is critical (e.g., bank balance), but you also need partition tolerance.",
             question: "According to the CAP Theorem, what must you sacrifice?",
             options: [
-                "**Availability**",
+                "Availability",
                 "Consistency",
                 "Partition Tolerance",
                 "Latency"
             ],
-            answerText: "**Availability**"
+            answerText: "Availability"
         },
         {
             scenario: "A malicious user is sending 10,000 requests per second from a single IP address, trying to crash your server.",
             question: "What defense mechanism should you implement at the API Gateway or Middleware level?",
             options: [
-                "**Rate Limiting**",
+                "Rate Limiting",
                 "Data Encryption",
                 "Database Indexing",
                 "Load Balancing"
             ],
-            answerText: "**Rate Limiting**"
+            answerText: "Rate Limiting"
         },
         {
-            scenario: "You are using Git. You have finished a feature and want to merge it into the `main` branch, but `main` has moved forward since you started.",
-            question: "What common operation updates your branch with the latest changes from `main` so you can resolve conflicts locally?",
+            scenario: "You are using Git. You have finished a feature and want to merge it into the main branch, but main has moved forward since you started.",
+            question: "What common operation updates your branch with the latest changes from main so you can resolve conflicts locally?",
             options: [
-                "**Git Rebase or Git Merge**",
+                "Git Rebase or Git Merge",
                 "Git Stash",
                 "Git Fork",
                 "Git Cherry-pick"
             ],
-            answerText: "**Git Rebase or Git Merge**"
+            answerText: "Git Rebase or Git Merge"
         }
     ];
 
