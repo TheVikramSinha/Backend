@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timed Backend Developer Assessment (Python/Node)</title>
+    <style>
+        /* CSS for Typeform-like UI */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            color: #333;
+            transition: background-color 0.5s;
+        }
+
+        #quiz-container {
+            background: white;
+            padding: 40px 60px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+            min-height: 450px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .question-slide {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .question-slide.active {
+            display: block;
+            opacity: 1;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .scenario-text {
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #e3f2fd;
+            border-left: 5px solid #007bff;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #2c3e50;
+        }
+
+        .option-button {
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            background: white;
+            font-size: 1.05em;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            line-height: 1.4;
+        }
+
+        .option-button:hover {
+            border-color: #007bff;
+            background-color: #f0f8ff;
+        }
+
+        .option-button.selected {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        #navigation {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .nav-button {
+            padding: 12px 24px;
+            font-size: 1em;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        #next-button {
+            background-color: #28a745;
+            color: white;
+        }
+
+        #next-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #result-screen {
+            text-align: center;
+            padding: 50px 0;
+        }
+
+        #result-screen h2 {
+            font-size: 2.5em;
+            color: #007bff;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #007bff;
+            width: 0%;
+            transition: width 0.3s ease-in-out;
+        }
+
+        #timer-display {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #dc3545;
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        #start-screen {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        #start-screen h1 {
+            color: #007bff;
+            font-size: 2.5em;
+        }
+
+        #start-button {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.4em;
+            border-radius: 8px;
+            margin-top: 30px;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s;
+        }
+
+        #start-button:hover {
+            background-color: #0056b3;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #6c757d;
+            color: white;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    
+    <div id="start-screen">
+        <h1>⚙️ Backend Assessment (Python/Node)</h1>
+        <p style="margin-top: 20px; font-size: 1.2em;">Welcome. This covers System Design, Security, and Python/Node internals.</p>
+        
+        <hr style="margin: 25px 0;">
+
+        <div style="text-align: left; margin-bottom: 15px; font-size: 1.1em;">
+            ✅ **Total Questions:** 25 Scenarios (General Architecture + Python/Node Specifics).
+        </div>
+        <div style="text-align: left; margin-bottom: 15px; font-size: 1.1em;">
+            ⏱️ **Time Limit:** You have **30 seconds** per question.
+        </div>
+        <div style="text-align: left; margin-bottom: 15px; color: #dc3545; font-weight: bold;">
+            ⚠️ **Critical:** Questions auto-advance when time runs out. The system will analyze your suitability for Junior vs Senior roles.
+        </div>
+
+        <button id="start-button" onclick="startQuiz()">Start Assessment</button>
+    </div>
+
+    <div id="quiz-interface" style="display: none;">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div id="timer-display">Time Left: <span id="time-left">30</span>s</div>
+        
+        <div id="quiz-content">
+            </div>
+        
+        <div id="result-screen" style="display: none;">
+            <h2>Assessment Complete!</h2>
+            <p style="font-size: 1.2em;">Here is your technical profile analysis:</p>
+            
+            <p id="final-score" style="font-size: 3em; font-weight: bold; color: #333;">--/--</p>
+            
+            <div id="role-designation" class="role-badge">Analyzing...</div>
+            
+            <p id="performance-feedback" style="font-size: 1.1em; color: #555; margin-top:25px; line-height: 1.6;"></p>
+            
+            <button class="nav-button" style="background-color: #6c757d; margin-top:20px;" onclick="window.location.reload()">Retake Assessment</button>
+        </div>
+
+        <div id="navigation">
+            <button id="next-button" class="nav-button" disabled>Next →</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Utility: Shuffle Array
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[i], array[j]];
+        }
+        return array;
+    }
+
+    const initialQuestions = [
+        // --- 5 SPECIFIC PYTHON & NODE QUESTIONS (NEW) ---
+        {
+            scenario: "[Python] You are running a CPU-intensive task (e.g., image processing) using multi-threading in Python, but you notice it's only using one CPU core.",
+            question: "What Python mechanism is preventing true parallelism in threads?",
+            options: [
+                "**The Global Interpreter Lock (GIL)**",
+                "The Garbage Collector",
+                "List Comprehensions",
+                "The `asyncio` loop"
+            ],
+            answerText: "**The Global Interpreter Lock (GIL)**"
+        },
+        {
+            scenario: "[Node.js] You have a Node.js server. A user uploads a 5GB file. Your server crashes with an 'Out of Memory' error because you tried to read the whole file into a variable.",
+            question: "What Node.js feature should you use to process this file in chunks without filling up RAM?",
+            options: [
+                "**Streams (fs.createReadStream)**",
+                "Buffers (fs.readFileSync)",
+                "Promises",
+                "Events"
+            ],
+            answerText: "**Streams (fs.createReadStream)**"
+        },
+        {
+            scenario: "[Python] You see this code: `@app.route('/login')`. The `@` symbol modifies the function below it.",
+            question: "What is this feature called, and what does it technically do?",
+            options: [
+                "**Decorator; it wraps a function to extend its behavior without modifying the function itself.**",
+                "Generator; it creates an iterator.",
+                "Lambda; it creates an anonymous function.",
+                "Mixin; it adds properties to a class."
+            ],
+            answerText: "**Decorator; it wraps a function to extend its behavior without modifying the function itself.**"
+        },
+        {
+            scenario: "[Node.js] You write a function that calculates Fibonacci numbers recursively. When a user requests a large number, the entire server freezes and cannot handle other requests.",
+            question: "Why does this happen in Node.js?",
+            options: [
+                "**Node.js is Single-Threaded; CPU-intensive tasks block the Event Loop.**",
+                "Node.js ran out of stack memory.",
+                "The Garbage Collector is running.",
+                "You forgot to use `await`."
+            ],
+            answerText: "**Node.js is Single-Threaded; CPU-intensive tasks block the Event Loop.**"
+        },
+        {
+            scenario: "[Node.js] A developer deleted their `node_modules` folder and ran `npm install`. The production app broke because a library updated to a newer version automatically.",
+            question: "Which file was missing or ignored that guarantees exact version consistency?",
+            options: [
+                "**package-lock.json**",
+                "package.json",
+                ".gitignore",
+                "node_version.txt"
+            ],
+            answerText: "**package-lock.json**"
+        },
+
+        // --- 20 GENERAL BACKEND QUESTIONS (RETAINED) ---
+        {
+            scenario: "You have a user listing API that is becoming slow. You notice the code executes 1 SQL query to get 50 users, and then loops through them to execute 50 more queries to get each user's address.",
+            question: "What performance issue is this, and how do you fix it?",
+            options: [
+                "**The N+1 problem; fix using Eager Loading or SQL JOINs.**",
+                "Deadlock; fix using transaction isolation levels.",
+                "Memory Leak; fix using garbage collection.",
+                "Index Fragmentation; fix by re-indexing the database."
+            ],
+            answerText: "**The N+1 problem; fix using Eager Loading or SQL JOINs.**"
+        },
+        {
+            scenario: "A user double-clicks the 'Pay Now' button. Your API receives two identical requests at the exact same millisecond. Both are processed, charging the user twice.",
+            question: "What property is your API missing to safely handle this scenario?",
+            options: [
+                "**Idempotency**",
+                "Scalability",
+                "Authentication",
+                "Availability"
+            ],
+            answerText: "**Idempotency**"
+        },
+        {
+            scenario: "You are designing an endpoint `POST /api/orders`. After a successful creation, what is the standard HTTP status code you should return?",
+            question: "Select the most semantically correct status code.",
+            options: [
+                "**201 Created**",
+                "200 OK",
+                "204 No Content",
+                "202 Accepted"
+            ],
+            answerText: "**201 Created**"
+        },
+        {
+            scenario: "Your application session data is currently stored in the memory of a single web server. You need to scale to 5 servers behind a load balancer, but users keep getting logged out.",
+            question: "What is the industry-standard solution to manage sessions in a distributed environment?",
+            options: [
+                "**Use a distributed cache like Redis or Memcached.**",
+                "Use Sticky Sessions (Session Affinity) only.",
+                "Store the session in a global static variable.",
+                "Increase the RAM on all servers."
+            ],
+            answerText: "**Use a distributed cache like Redis or Memcached.**"
+        },
+        {
+            scenario: "You are building a high-traffic news feed. The data doesn't change often, but thousands of users request it every second. The database CPU is at 100%.",
+            question: "What is the most effective immediate strategy to reduce database load?",
+            options: [
+                "**Implement a caching layer (e.g., Redis/CDN) for read-heavy data.**",
+                "Migrate to a NoSQL database.",
+                "Normalize the database schema further.",
+                "Switch from TCP to UDP."
+            ],
+            answerText: "**Implement a caching layer (e.g., Redis/CDN) for read-heavy data.**"
+        },
+        {
+            scenario: "A developer writes a query: `SELECT * FROM users WHERE email = 'input_value';`. A hacker inputs `' OR '1'='1`.",
+            question: "What vulnerability is this, and how do you prevent it?",
+            options: [
+                "**SQL Injection; prevent using Parameterized Queries (Prepared Statements).**",
+                "XSS (Cross-Site Scripting); prevent using Content Security Policy.",
+                "CSRF; prevent using Anti-Forgery Tokens.",
+                "DDoS; prevent using Rate Limiting."
+            ],
+            answerText: "**SQL Injection; prevent using Parameterized Queries (Prepared Statements).**"
+        },
+        {
+            scenario: "Two banking transactions try to update the same account balance simultaneously. Transaction A reads $100. Transaction B reads $100. Both write $110. The balance should be $120, but ends up as $110.",
+            question: "What is this phenomenon called?",
+            options: [
+                "**Race Condition**",
+                "Deadlock",
+                "Stack Overflow",
+                "Memory Leak"
+            ],
+            answerText: "**Race Condition**"
+        },
+        {
+            scenario: "You need to store financial transaction records that must strictly adhere to a rigid schema and guarantee ACID properties.",
+            question: "Which database type is generally the best fit?",
+            options: [
+                "**Relational Database (SQL)**",
+                "Key-Value Store (NoSQL)",
+                "Document Store (NoSQL)",
+                "Graph Database"
+            ],
+            answerText: "**Relational Database (SQL)**"
+        },
+        {
+            scenario: "Your API users are complaining about timeouts. You discover that the API waits for an email to be sent via a 3rd party service before responding to the user.",
+            question: "How should you re-architect this to improve response time?",
+            options: [
+                "**Offload email sending to an asynchronous Message Queue (e.g., RabbitMQ, Kafka).**",
+                "Increase the HTTP timeout limit on the client side.",
+                "Use a faster SMTP server.",
+                "Compress the JSON response."
+            ],
+            answerText: "**Offload email sending to an asynchronous Message Queue (e.g., RabbitMQ, Kafka).**"
+        },
+        {
+            scenario: "You are designing a REST API. A client requests `GET /users/999` but user 999 does not exist.",
+            question: "What HTTP status code should the server return?",
+            options: [
+                "**404 Not Found**",
+                "500 Internal Server Error",
+                "204 No Content",
+                "400 Bad Request"
+            ],
+            answerText: "**404 Not Found**"
+        },
+        {
+            scenario: "Your system runs on 10 microservices. A request fails, but you don't know which service caused the failure.",
+            question: "What architectural pattern/tool helps track a request across multiple microservices?",
+            options: [
+                "**Distributed Tracing (e.g., Jaeger, Zipkin) with Correlation IDs.**",
+                "Centralized Logging without IDs.",
+                "Health Check endpoints.",
+                "Circuit Breaker pattern."
+            ],
+            answerText: "**Distributed Tracing (e.g., Jaeger, Zipkin) with Correlation IDs.**"
+        },
+        {
+            scenario: "You need to secure an API used by a mobile app. You want to avoid sending credentials with every request and want a stateless authentication mechanism.",
+            question: "Which standard is best suited for this?",
+            options: [
+                "**JWT (JSON Web Tokens)**",
+                "Server-side Sessions (Cookies)",
+                "Basic Authentication",
+                "Digest Authentication"
+            ],
+            answerText: "**JWT (JSON Web Tokens)**"
+        },
+        {
+            scenario: "You have a table with 10 million rows. Queries filtering by `last_name` are taking 5 seconds.",
+            question: "What is the most likely first step to optimize this query?",
+            options: [
+                "**Add a database index on the `last_name` column.**",
+                "Archive old data.",
+                "Change the column type to Varchar(255).",
+                "Switch to a Graph database."
+            ],
+            answerText: "**Add a database index on the `last_name` column.**"
+        },
+        {
+            scenario: "You are deploying a new version of your API. You want to route 10% of traffic to the new version and 90% to the old version to test stability.",
+            question: "What is this deployment strategy called?",
+            options: [
+                "**Canary Deployment**",
+                "Blue-Green Deployment",
+                "Rolling Update",
+                "Big Bang Deployment"
+            ],
+            answerText: "**Canary Deployment**"
+        },
+        {
+            scenario: "A 3rd party payment API you rely on is down. Your system keeps trying to call it, tying up all your threads and crashing your own application.",
+            question: "What design pattern prevents this cascading failure?",
+            options: [
+                "**Circuit Breaker Pattern**",
+                "Singleton Pattern",
+                "Observer Pattern",
+                "Factory Pattern"
+            ],
+            answerText: "**Circuit Breaker Pattern**"
+        },
+        {
+            scenario: "Your serverless function (e.g., AWS Lambda) takes 5 seconds to respond effectively after not being used for an hour, but only 200ms for subsequent requests.",
+            question: "What is this phenomenon called?",
+            options: [
+                "**Cold Start**",
+                "Memory Leak",
+                "Garbage Collection Pause",
+                "Network Latency"
+            ],
+            answerText: "**Cold Start**"
+        },
+        {
+            scenario: "You have an endpoint `PUT /users/{id}` that updates user details. If a client sends the request without the `email` field, the existing email in the database gets deleted/set to null.",
+            question: "What is the likely cause?",
+            options: [
+                "**PUT replaces the entire resource. PATCH should be used for partial updates.**",
+                "The database trigger is malfunctioning.",
+                "The API is not idempotent.",
+                "The client sent a 204 status."
+            ],
+            answerText: "**PUT replaces the entire resource. PATCH should be used for partial updates.**"
+        },
+        {
+            scenario: "You are designing a system where consistency is critical (e.g., bank balance), but you also need partition tolerance.",
+            question: "According to the CAP Theorem, what must you sacrifice?",
+            options: [
+                "**Availability**",
+                "Consistency",
+                "Partition Tolerance",
+                "Latency"
+            ],
+            answerText: "**Availability**"
+        },
+        {
+            scenario: "A malicious user is sending 10,000 requests per second from a single IP address, trying to crash your server.",
+            question: "What defense mechanism should you implement at the API Gateway or Middleware level?",
+            options: [
+                "**Rate Limiting**",
+                "Data Encryption",
+                "Database Indexing",
+                "Load Balancing"
+            ],
+            answerText: "**Rate Limiting**"
+        },
+        {
+            scenario: "You are using Git. You have finished a feature and want to merge it into the `main` branch, but `main` has moved forward since you started.",
+            question: "What common operation updates your branch with the latest changes from `main` so you can resolve conflicts locally?",
+            options: [
+                "**Git Rebase or Git Merge**",
+                "Git Stash",
+                "Git Fork",
+                "Git Cherry-pick"
+            ],
+            answerText: "**Git Rebase or Git Merge**"
+        }
+    ];
+
+    // --- Data Preparation ---
+    const shuffledInitialQuestions = shuffleArray(initialQuestions);
+    const questions = shuffledInitialQuestions.map(q => {
+        const indexedOptions = q.options.map((text) => ({ text: text, isCorrect: text === q.answerText }));
+        const shuffledOptions = shuffleArray(indexedOptions);
+        const newAnswerIndex = shuffledOptions.findIndex(opt => opt.isCorrect);
+        const finalOptions = shuffledOptions.map(opt => opt.text);
+        
+        return {
+            scenario: q.scenario,
+            question: q.question,
+            options: finalOptions,
+            answer: newAnswerIndex
+        };
+    });
+
+    let currentQuestionIndex = 0;
+    let userAnswers = new Array(questions.length).fill(null);
+    let timerInterval;
+    const TIME_LIMIT = 30;
+
+    const startScreen = document.getElementById('start-screen');
+    const quizInterface = document.getElementById('quiz-interface');
+    const quizContent = document.getElementById('quiz-content');
+    const resultScreen = document.getElementById('result-screen');
+    const nextButton = document.getElementById('next-button');
+    const progressFill = document.getElementById('progress-fill');
+    const timeLeftSpan = document.getElementById('time-left');
+    const totalQuestions = questions.length;
+
+    // --- Core Functions ---
+
+    window.startQuiz = function() {
+        startScreen.style.display = 'none';
+        quizInterface.style.display = 'block';
+        renderQuestion(currentQuestionIndex);
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        let timeRemaining = TIME_LIMIT;
+        timeLeftSpan.textContent = timeRemaining;
+
+        timerInterval = setInterval(() => {
+            timeRemaining--;
+            timeLeftSpan.textContent = timeRemaining;
+
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                if (currentQuestionIndex < totalQuestions - 1) {
+                    currentQuestionIndex++;
+                    renderQuestion(currentQuestionIndex);
+                } else {
+                    showResults();
+                }
+            }
+        }, 1000);
+    }
+
+    function renderQuestion(index) {
+        clearInterval(timerInterval);
+        document.querySelectorAll('.question-slide').forEach(q => q.classList.remove('active'));
+
+        let questionElement = document.getElementById(`q-${index}`);
+
+        if (!questionElement) {
+            const qData = questions[index];
+            questionElement = document.createElement('div');
+            questionElement.className = 'question-slide';
+            questionElement.id = `q-${index}`;
+
+            let optionsHtml = qData.options.map((option, optIndex) => `
+                <button class="option-button" data-question-index="${index}" data-option-index="${optIndex}">
+                    ${option}
+                </button>
+            `).join('');
+
+            questionElement.innerHTML = `
+                <h2>Question ${index + 1} of ${totalQuestions}</h2>
+                <div class="scenario-text">${qData.scenario}</div>
+                <p style="font-weight: bold; font-size: 1.1em; margin-bottom: 20px;">${qData.question}</p>
+                <div class="options-group">${optionsHtml}</div>
+            `;
+            quizContent.appendChild(questionElement);
+
+            questionElement.querySelectorAll('.option-button').forEach(button => {
+                button.addEventListener('click', handleOptionClick);
+            });
+        }
+        
+        setTimeout(() => { questionElement.classList.add('active'); }, 10); 
+        startTimer();
+
+        updateNavigation();
+        updateProgress();
+        highlightSelectedAnswer(index);
+    }
+
+    function handleOptionClick(event) {
+        const button = event.target.closest('.option-button');
+        const qIndex = parseInt(button.dataset.questionIndex);
+        const oIndex = parseInt(button.dataset.optionIndex);
+        userAnswers[qIndex] = oIndex;
+
+        const optionsGroup = button.closest('.options-group');
+        optionsGroup.querySelectorAll('.option-button').forEach(btn => btn.classList.remove('selected'));
+        button.classList.add('selected');
+
+        updateNavigation(); 
+    }
+
+    function highlightSelectedAnswer(index) {
+        const selectedOption = userAnswers[index];
+        const currentSlide = document.getElementById(`q-${index}`);
+        if (currentSlide && selectedOption !== null) {
+            currentSlide.querySelectorAll('.option-button').forEach((btn, optIndex) => {
+                btn.classList.remove('selected');
+                if (optIndex === selectedOption) {
+                    btn.classList.add('selected');
+                }
+            });
+        }
+    }
+
+    function updateNavigation() {
+        const isAnswered = userAnswers[currentQuestionIndex] !== null; 
+
+        if (currentQuestionIndex < totalQuestions - 1) {
+            nextButton.textContent = 'Next →';
+            nextButton.disabled = !isAnswered; 
+            nextButton.onclick = () => { 
+                 if (isAnswered) {
+                    clearInterval(timerInterval);
+                    currentQuestionIndex++; 
+                    renderQuestion(currentQuestionIndex);
+                } 
+            };
+        } else {
+            nextButton.textContent = 'Finish & Analyze';
+            nextButton.disabled = !isAnswered;
+            nextButton.onclick = () => { 
+                 if (isAnswered) {
+                    clearInterval(timerInterval);
+                    showResults(); 
+                 }
+            };
+        }
+    }
+
+    function updateProgress() {
+        const answeredCount = userAnswers.filter(a => a !== null).length;
+        const progress = (answeredCount / totalQuestions) * 100;
+        progressFill.style.width = `${progress}%`;
+    }
+
+    function calculateScore() {
+        let score = 0;
+        questions.forEach((q, index) => {
+            if (userAnswers[index] === q.answer) {
+                score++;
+            }
+        });
+        return score;
+    }
+
+    function showResults() {
+        clearInterval(timerInterval);
+        const finalScore = calculateScore();
+        const percentage = Math.round((finalScore / totalQuestions) * 100);
+        
+        let feedback = '';
+        let role = '';
+        let badgeColor = '';
+
+        // Role Designation Logic
+        if (percentage >= 85) {
+            role = "Senior Backend Developer";
+            badgeColor = "#28a745"; // Green
+            feedback = "Excellent work. You have demonstrated a mastery of architectural patterns, Node/Python internals (GIL/Event Loop), and advanced database optimization. You are well-suited for a Senior role.";
+        } else if (percentage >= 50) {
+            role = "Junior/Mid-level Backend Developer";
+            badgeColor = "#007bff"; // Blue
+            feedback = "Solid performance. You have a strong grasp of the fundamentals required for daily development tasks. You are eligible for a Junior to Mid-level position. Focus on deep-diving into the 'Why' (like why the Event Loop blocks) to advance.";
+        } else {
+            role = "Entry Level / Trainee";
+            badgeColor = "#ffc107"; // Yellow
+            feedback = "Thank you for completing the assessment. We recommend further study in core backend concepts and the specific constraints of Python/Node (async vs sync behavior) before taking on a professional role.";
+        }
+
+        quizContent.style.display = 'none';
+        document.getElementById('navigation').style.display = 'none';
+        document.getElementById('timer-display').style.display = 'none';
+        
+        progressFill.style.width = '100%';
+        resultScreen.style.display = 'block';
+        
+        document.getElementById('final-score').textContent = `${finalScore} / ${totalQuestions}`;
+        
+        const roleBadge = document.getElementById('role-designation');
+        roleBadge.textContent = role;
+        roleBadge.style.backgroundColor = badgeColor;
+        if(role === "Entry Level / Trainee") roleBadge.style.color = "#333";
+
+        document.getElementById('performance-feedback').textContent = feedback;
+    }
+
+</script>
+
+</body>
+</html>
