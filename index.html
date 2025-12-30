@@ -278,7 +278,7 @@
             ✅ <strong>25 Randomized Questions</strong> (No two tests are the same).
         </div>
         <div style="text-align: left; margin-bottom: 15px; font-size: 1.1em;">
-            ⏱️ <strong>35 Seconds</strong> per question. Auto-advance enabled.
+            ⏱️ <strong>30 Seconds</strong> per question. Auto-advance enabled.
         </div>
         <div style="text-align: left; margin-bottom: 15px; color: #dc3545; font-weight: bold;">
             ⚠️ Smart Analysis will determine your fit for Junior vs Senior roles.
@@ -545,7 +545,7 @@
     let currentQuestionIndex = 0;
     let userAnswers = new Array(questions.length).fill(null);
     let timerInterval;
-    const TIME_LIMIT = 35; // 35 Seconds
+    const TIME_LIMIT = 30; // 35 Seconds
 
     // --- 5. DOM ELEMENTS ---
     const startScreen = document.getElementById('start-screen');
@@ -738,7 +738,7 @@
             
             if (missedTopics.size > 6) {
                 const li = document.createElement('li');
-                li.textContent = `...and ${missedTopics.size - 6} other topics.`;
+                li.textContent = `...and ${missedTopics.size - 6} other missed topics.`;
                 li.style.fontStyle = 'italic';
                 weaknessList.appendChild(li);
             }
